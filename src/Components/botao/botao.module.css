@@ -1,0 +1,24 @@
+.secundario {
+  background: transparent;
+  color: #667eea;
+  border: 2px solid #667eea;
+}
+
+.secundario:hover {
+  background: #667eea;
+  color: white;
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+/* Botão de sucesso */
+.sucesso {
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  color: white;
+}
+
+.sucesso:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+  background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+}
