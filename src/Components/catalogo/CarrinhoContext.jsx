@@ -1,5 +1,5 @@
 // src/components/Catalogo/CarrinhoContext.jsx
-import React, { createContext, useContext, useReducer } from 'react';
+import React, { createContext, useContext, useReducer, useState } from 'react';
 
 const CarrinhoContext = createContext();
 
@@ -8,26 +8,12 @@ const carrinhoReducer = (state, action) => {
     case 'ADICIONAR_ITEM':
       const itemExistente = state.find(item => item.id === action.payload.id);
       if (itemExistente) {
-        return state.map(item =>
-          item.id === action.payload.id
-            ? { ...item, quantidade: item.quantidade + 1 }
-            : item
-        );
+        return state;
       }
       return [...state, { ...action.payload, quantidade: 1 }];
 
     case 'REMOVER_ITEM':
       return state.filter(item => item.id !== action.payload);
-
-    case 'ATUALIZAR_QUANTIDADE':
-      if (action.payload.quantidade <= 0) {
-        return state.filter(item => item.id !== action.payload.id);
-      }
-      return state.map(item =>
-        item.id === action.payload.id
-          ? { ...item, quantidade: action.payload.quantidade }
-          : item
-      );
 
     case 'LIMPAR_CARRINHO':
       return [];
@@ -39,17 +25,25 @@ const carrinhoReducer = (state, action) => {
 
 export const CarrinhoProvider = ({ children }) => {
   const [carrinho, dispatch] = useReducer(carrinhoReducer, []);
+  const [mensagemAviso, setMensagemAviso] = useState('');
+  const [sidebarAberto, setSidebarAberto] = useState(false); // NOVO
+
 
   const adicionarItem = (produto) => {
+    const existe = carrinho.find(item => item.id === produto.id);
+    if (existe) {
+      setMensagemAviso('Item já foi adicionado ao carrinho!');
+      return false; // duplicata
+    }
     dispatch({ type: 'ADICIONAR_ITEM', payload: produto });
+    setMensagemAviso(''); // limpa aviso se adicionou
+    setSidebarAberto(true); // abre sidebar automaticamente
+    return true;
   };
+
 
   const removerItem = (produtoId) => {
     dispatch({ type: 'REMOVER_ITEM', payload: produtoId });
-  };
-
-  const atualizarQuantidade = (produtoId, quantidade) => {
-    dispatch({ type: 'ATUALIZAR_QUANTIDADE', payload: { id: produtoId, quantidade } });
   };
 
   const limparCarrinho = () => {
@@ -60,17 +54,24 @@ export const CarrinhoProvider = ({ children }) => {
     return carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0);
   };
 
+
   const totalItens = carrinho.reduce((total, item) => total + item.quantidade, 0);
+
 
   return (
     <CarrinhoContext.Provider value={{
       carrinho,
       adicionarItem,
       removerItem,
-      atualizarQuantidade,
       limparCarrinho,
       calcularTotal,
-      totalItens
+      totalItens,
+      sidebarAberto,
+      setSidebarAberto,
+      mensagemAviso,
+      setMensagemAviso
+
+
     }}>
       {children}
     </CarrinhoContext.Provider>

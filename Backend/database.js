@@ -23,6 +23,7 @@ function initDatabase() {
       imagem TEXT,
       estoque INTEGER DEFAULT 0,
       marca TEXT,
+      cod_sku TEXT UNIQUE,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )

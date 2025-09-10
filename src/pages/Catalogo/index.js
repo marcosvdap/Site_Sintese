@@ -5,14 +5,14 @@ import { CarrinhoProvider, useCarrinho } from '../../Components/catalogo/Carrinh
 import FiltrosBusca from '../../Components/catalogo/FiltrosBusca';
 import ProdutoCard from '../../Components/catalogo/ProdutoCard';
 import CarrinhoSidebar from '../../Components/catalogo/CarrinhoSidebar';
-import {useProdutos} from '../../Components/catalogo/useProdutos';
+import { useProdutos } from '../../Components/catalogo/useProdutos';
 
 // Componente interno que usa o Context
 const CatalogoContent = () => {
   const [filtroCategoria, setFiltroCategoria] = useState('todos');
   const [busca, setBusca] = useState('');
   const [carrinhoAberto, setCarrinhoAberto] = useState(false);
-  
+
   const { produtos, loading, error, filtrarProdutos, obterCategorias } = useProdutos();
   const { totalItens } = useCarrinho();
 
@@ -104,17 +104,17 @@ const CatalogoContent = () => {
         </nav>
 
         {/* Estatísticas */}
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          gap: '30px', 
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '30px',
           marginBottom: '30px',
           flexWrap: 'wrap'
         }}>
-          <div style={{ 
-            textAlign: 'center', 
-            background: 'white', 
-            padding: '20px', 
+          <div style={{
+            textAlign: 'center',
+            background: 'white',
+            padding: '20px',
             borderRadius: '8px',
             minWidth: '120px',
             boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
@@ -126,10 +126,10 @@ const CatalogoContent = () => {
               Produtos
             </div>
           </div>
-          <div style={{ 
-            textAlign: 'center', 
-            background: 'white', 
-            padding: '20px', 
+          <div style={{
+            textAlign: 'center',
+            background: 'white',
+            padding: '20px',
             borderRadius: '8px',
             minWidth: '120px',
             boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
@@ -141,10 +141,10 @@ const CatalogoContent = () => {
               Categorias
             </div>
           </div>
-          <div style={{ 
-            textAlign: 'center', 
-            background: 'white', 
-            padding: '20px', 
+          <div style={{
+            textAlign: 'center',
+            background: 'white',
+            padding: '20px',
             borderRadius: '8px',
             minWidth: '120px',
             boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
@@ -159,7 +159,7 @@ const CatalogoContent = () => {
         </div>
 
         {/* Botão Carrinho Fixo */}
-        <button 
+        <button
           style={carrinhoButtonStyle}
           onClick={() => setCarrinhoAberto(!carrinhoAberto)}
         >
@@ -175,40 +175,44 @@ const CatalogoContent = () => {
           categorias={categorias}
         />
 
-  {/* Grid de Produtos */}
-{produtosFiltrados.length === 0 ? (
-  <div style={{ 
-    textAlign: 'center', 
-    padding: '60px 20px', 
-    color: '#666',
-    fontSize: '18px',
-    background: 'white',
-    borderRadius: '8px'
-  }}>
-    {produtos.length === 0 ? 
-      'Carregando produtos...' : 
-      `Nenhum produto encontrado para "${busca}" na categoria "${filtroCategoria}"`
-    }
-    <br/>
-    <small style={{ color: '#999', fontSize: '14px' }}>
-      Total de produtos: {produtos.length} | Filtrados: {produtosFiltrados.length}
-    </small>
-  </div>
-) : (
-  <>
-    <div style={{ marginBottom: '20px', color: '#666', textAlign: 'center' }}>
-      Mostrando {produtosFiltrados.length} de {produtos.length} produtos
-    </div>
-    <div style={gridStyle}>
-      {produtosFiltrados.map(produto => (
-        <ProdutoCard key={produto.id} produto={produto} />
-      ))}
-    </div>
-  </>
-)}
+        {/* Grid de Produtos */}
+        {produtosFiltrados.length === 0 ? (
+          <div style={{
+            textAlign: 'center',
+            padding: '60px 20px',
+            color: '#666',
+            fontSize: '18px',
+            background: 'white',
+            borderRadius: '8px'
+          }}>
+            {produtos.length === 0 ?
+              'Carregando produtos...' :
+              `Nenhum produto encontrado para "${busca}" na categoria "${filtroCategoria}"`
+            }
+            <br />
+            <small style={{ color: '#999', fontSize: '14px' }}>
+              Total de produtos: {produtos.length} | Filtrados: {produtosFiltrados.length}
+            </small>
+          </div>
+        ) : (
+          <>
+            <div style={{ marginBottom: '20px', color: '#666', textAlign: 'center' }}>
+              Mostrando {produtosFiltrados.length} de {produtos.length} produtos
+            </div>
+            <div style={gridStyle}>
+              {produtosFiltrados.map(produto => (
+                <ProdutoCard
+                  key={produto.id}
+                  produto={produto}
+                  abrirCarrinho={setCarrinhoAberto}
+                />
+              ))}
+            </div>
+          </>
+        )}
 
         {/* Carrinho Lateral */}
-        <CarrinhoSidebar 
+        <CarrinhoSidebar
           isAberto={carrinhoAberto}
           onFechar={() => setCarrinhoAberto(false)}
         />
