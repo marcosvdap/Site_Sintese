@@ -18,11 +18,10 @@ function initDatabase() {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       nome TEXT NOT NULL,
       categoria TEXT NOT NULL,
+      codigo_fabricante TEXT,
       preco REAL NOT NULL,
       descricao TEXT,
       imagem TEXT,
-      estoque INTEGER DEFAULT 0,
-      marca TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
@@ -45,7 +44,7 @@ function verificarEPopular() {
       console.error('Erro ao verificar produtos:', err);
       return;
     }
-    
+
     if (row.count === 0) {
       console.log('📝 Populando banco com dados iniciais...');
       popularDadosIniciais();
@@ -59,74 +58,43 @@ function popularDadosIniciais() {
   const produtos = [
     {
       nome: "Kit de Extração de DNA",
-      categoria: "Extração",
+      categoria: "IDT",
+      Codigo_fabricante: "Bases",
       preco: 450.00,
       descricao: "Kit completo para extração de DNA de alta qualidade",
       imagem: "https://via.placeholder.com/300x200/667eea/white?text=DNA+Kit",
-      estoque: 25,
-      marca: "IDT"
     },
     {
-      nome: "Reagente PCR Master Mix",
-      categoria: "PCR",
-      preco: 320.00,
-      descricao: "Mix pronto para reações de PCR",
-      imagem: "https://via.placeholder.com/300x200/667eea/white?text=PCR+Mix",
-      estoque: 15,
-      marca: "BioLab"
+      nome: "Nucletiodeos Modificados",
+      categoria: "OMEGA BIO TEK",
+      Codigo_fabricante: "Bases",
+      preco: 450.00,
+      descricao: "Kit completo para extração de DNA de alta qualidade",
+      imagem: "https://via.placeholder.com/300x200/667eea/white?text=DNA+Kit",
     },
     {
-      nome: "Primers Oligonucleotídeos",
-      categoria: "Primers",
-      preco: 180.00,
-      descricao: "Primers customizados de alta pureza",
-      imagem: "https://via.placeholder.com/300x200/667eea/white?text=Primers",
-      estoque: 50,
-      marca: "IDT"
-    },
-    {
-      nome: "Kit de Clonagem",
-      categoria: "Clonagem",
-      preco: 680.00,
-      descricao: "Kit completo para clonagem molecular",
-      imagem: "https://via.placeholder.com/300x200/667eea/white?text=Clonagem",
-      estoque: 8,
-      marca: "Thermo"
-    },
-    {
-      nome: "Enzimas de Restrição",
-      categoria: "Enzimas",
-      preco: 290.00,
-      descricao: "Set de enzimas de restrição comuns",
-      imagem: "https://via.placeholder.com/300x200/667eea/white?text=Enzimas",
-      estoque: 30,
-      marca: "NEB"
-    },
-    {
-      nome: "Kit Sequenciamento NGS",
-      categoria: "Sequenciamento",
-      preco: 1250.00,
-      descricao: "Kit preparação biblioteca NGS",
-      imagem: "https://via.placeholder.com/300x200/667eea/white?text=NGS+Kit",
-      estoque: 5,
-      marca: "Illumina"
+      nome: "desenvolvimento licenciamento",
+      categoria: "IDT",
+      Codigo_fabricante: "Bases",
+      preco: 450.00,
+      descricao: "Kit completo para extração de DNA de alta qualidade",
+      imagem: "https://via.placeholder.com/300x200/667eea/white?text=DNA+Kit",
     }
   ];
 
   const stmt = db.prepare(`
-    INSERT INTO produtos (nome, categoria, preco, descricao, imagem, estoque, marca) 
-    VALUES (?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO produtos (nome, categoria, codigo_fabricante ,preco, descricao, imagem) 
+    VALUES (?, ?, ?, ?, ?, ?)
   `);
 
   produtos.forEach(produto => {
     stmt.run(
       produto.nome,
       produto.categoria,
+      produto.Codigo_fabricante ,
       produto.preco,
       produto.descricao,
       produto.imagem,
-      produto.estoque,
-      produto.marca
     );
   });
 

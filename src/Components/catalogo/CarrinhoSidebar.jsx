@@ -2,17 +2,19 @@
 import React from 'react';
 import { useCarrinho } from './CarrinhoContext';
 import styles from './Catalogo.module.css';
+import ModalCheckout from '../modalcheckout';
+import { useState } from 'react';
 
-const CarrinhoItem = ({ item, onRemover, onAtualizarQuantidade }) => {
+const CarrinhoItem = ({ item, onRemover }) => {
   return (
     <div className={styles.carrinhoItem}>
       <img src={item.imagem} alt={item.nome} />
-      
+
       <div className={styles.itemInfo}>
         <h4>{item.nome}</h4>
       </div>
-      
-      <button 
+
+      <button
         className={styles.btnRemover}
         onClick={() => onRemover(item.id)}
       >
@@ -22,8 +24,10 @@ const CarrinhoItem = ({ item, onRemover, onAtualizarQuantidade }) => {
   );
 };
 
+
 const CarrinhoSidebar = ({ isAberto, onFechar }) => {
-  const { carrinho, removerItem, atualizarQuantidade, calcularTotal } = useCarrinho();
+const { carrinho, removerItem, calcularTotal, mensagemAviso} = useCarrinho();
+const [modalCheckoutAberto, setModalCheckoutAberto] = useState(false);
 
   if (!isAberto) return null;
 
@@ -34,16 +38,21 @@ const CarrinhoSidebar = ({ isAberto, onFechar }) => {
         <button onClick={onFechar}>✕</button>
       </div>
 
+      {mensagemAviso && (
+        <div className={styles.avisoDuplicado}>
+          {mensagemAviso}
+        </div>
+      )}
+
       <div className={styles.carrinhoItens}>
         {carrinho.length === 0 ? (
           <p>Carrinho vazio</p>
         ) : (
           carrinho.map(item => (
-            <CarrinhoItem 
-              key={item.id} 
+            <CarrinhoItem
+              key={item.id}
               item={item}
               onRemover={removerItem}
-              onAtualizarQuantidade={atualizarQuantidade}
             />
           ))
         )}
@@ -54,11 +63,21 @@ const CarrinhoSidebar = ({ isAberto, onFechar }) => {
           <div className={styles.total}>
             Total: R$ {calcularTotal().toFixed(2).replace('.', ',')}
           </div>
-          <button className={styles.btnFinalizar}>
+          <button className={styles.btnFinalizar} onClick={() => setModalCheckoutAberto(true)}>
             Finalizar Pedido
+
           </button>
         </div>
       )}
+      {/* Renderiza o modal */}
+      <ModalCheckout
+        isOpen={modalCheckoutAberto}
+        onClose={() => setModalCheckoutAberto(false)}
+        carrinho={carrinho}
+        total={calcularTotal()}
+      />
+      
+      
     </div>
   );
 };

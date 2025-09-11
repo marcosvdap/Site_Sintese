@@ -47,7 +47,7 @@ router.get('/:id', (req, res) => {
 
 // POST - Criar novo produto
 router.post('/', (req, res) => {
-  const { nome, categoria, preco, descricao, imagem, estoque, marca } = req.body;
+  const { nome, categoria, codigo_fabricante,preco, descricao, imagem} = req.body;
   
   if (!nome || !categoria || !preco) {
     res.status(400).json({ error: 'Nome, categoria e preço são obrigatórios' });
@@ -55,11 +55,11 @@ router.post('/', (req, res) => {
   }
   
   const sql = `
-    INSERT INTO produtos (nome, categoria, preco, descricao, imagem, estoque, marca) 
+    INSERT INTO produtos (nome, categoria, codigo_fabricante,preco, descricao, imagem) 
     VALUES (?, ?, ?, ?, ?, ?, ?)
   `;
   
-  db.run(sql, [nome, categoria, preco, descricao, imagem, estoque || 0, marca], function(err) {
+  db.run(sql, [nome, categoria,codigo_fabricante, preco, descricao, imagem], function(err) {
     if (err) {
       res.status(500).json({ error: err.message });
       return;
@@ -79,16 +79,16 @@ router.post('/', (req, res) => {
 // PUT - Atualizar produto
 router.put('/:id', (req, res) => {
   const { id } = req.params;
-  const { nome, categoria, preco, descricao, imagem, estoque, marca } = req.body;
+  const { nome, categoria, codigo_fabricante, preco, descricao, imagem} = req.body;
   
   const sql = `
     UPDATE produtos 
-    SET nome = ?, categoria = ?, preco = ?, descricao = ?, 
-        imagem = ?, estoque = ?, marca = ?, updated_at = CURRENT_TIMESTAMP
+    SET nome = ?, categoria = ?, codigo_fabricante = ?, preco = ?, descricao = ?, 
+        imagem = ?, updated_at = CURRENT_TIMESTAMP
     WHERE id = ?
   `;
   
-  db.run(sql, [nome, categoria, preco, descricao, imagem, estoque, marca, id], function(err) {
+  db.run(sql, [nome, categoria,codigo_fabricante, preco, descricao, imagem, id], function(err) {
     if (err) {
       res.status(500).json({ error: err.message });
       return;
@@ -110,38 +110,6 @@ router.put('/:id', (req, res) => {
   });
 });
 
-// PATCH - Atualizar estoque
-router.patch('/:id/estoque', (req, res) => {
-  const { id } = req.params;
-  const { estoque } = req.body;
-  
-  if (estoque === undefined) {
-    res.status(400).json({ error: 'Estoque é obrigatório' });
-    return;
-  }
-  
-  const sql = 'UPDATE produtos SET estoque = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?';
-  
-  db.run(sql, [estoque, id], function(err) {
-    if (err) {
-      res.status(500).json({ error: err.message });
-      return;
-    }
-    
-    if (this.changes === 0) {
-      res.status(404).json({ error: 'Produto não encontrado' });
-      return;
-    }
-    
-    db.get('SELECT * FROM produtos WHERE id = ?', [id], (err, row) => {
-      if (err) {
-        res.status(500).json({ error: err.message });
-        return;
-      }
-      res.json(row);
-    });
-  });
-});
 
 // DELETE - Deletar produto
 router.delete('/:id', (req, res) => {
