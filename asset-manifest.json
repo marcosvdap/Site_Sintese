@@ -1,0 +1,12 @@
+{
+  "files": {
+    "main.css": "/Site_Sintese/static/css/main.ca4849aa.css",
+    "main.js": "/Site_Sintese/static/js/main.d5fc596b.js",
+    "static/media/SINTESE_MARCA-1.png": "/Site_Sintese/static/media/SINTESE_MARCA-1.e9cb78e2464ae22f8148.png",
+    "index.html": "/Site_Sintese/index.html"
+  },
+  "entrypoints": [
+    "static/css/main.ca4849aa.css",
+    "static/js/main.d5fc596b.js"
+  ]
+}
