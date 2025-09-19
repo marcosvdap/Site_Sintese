@@ -3,6 +3,8 @@
 process.env.EMAIL_USER = 'marcosv.paes10@gmail.com';  // COLOQUE SEU EMAIL AQUI
 process.env.EMAIL_PASS = 'spynygrueuklbhbu';      // COLOQUE SUA SENHA DE APP AQUI
 
+// require("dotenv").config();
+
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -16,11 +18,13 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+const { router: authRouter} = require('./Auth');
+
 
 // Rotas
 const produtosRoutes = require('./produtos');
 app.use('/api/produtos', produtosRoutes);
-
+app.use('/api/auth', authRouter);
 // Rota de teste
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'API funcionando com SQLite!' });
@@ -31,8 +35,8 @@ app.post("/api/enviar-email", async (req, res) => {
   console.log("\n📨 Nova requisição de e-mail recebida");
   console.log("📍 Timestamp:", new Date().toISOString());
   console.log("📦 Body recebido:", JSON.stringify(req.body, null, 2));
-  
-  const { nome, email, telefone, dataEntrega, parcelas, itens, total } = req.body;
+
+  const { nome, email, telefone, instituicao, dataEntrega, parcelas, itens, total } = req.body;
 
   // Validações detalhadas
   const camposFaltando = [];
@@ -41,12 +45,12 @@ app.post("/api/enviar-email", async (req, res) => {
   if (!telefone) camposFaltando.push("telefone");
   if (!itens || itens.length === 0) camposFaltando.push("itens");
   if (total === undefined || total === null) camposFaltando.push("total");
-  
+
   if (camposFaltando.length > 0) {
     console.error("❌ Campos faltando:", camposFaltando);
-    return res.status(400).json({ 
-      success: false, 
-      message: `Campos obrigatórios faltando: ${camposFaltando.join(", ")}` 
+    return res.status(400).json({
+      success: false,
+      message: `Campos obrigatórios faltando: ${camposFaltando.join(", ")}`
     });
   }
 
@@ -55,16 +59,16 @@ app.post("/api/enviar-email", async (req, res) => {
     console.error("❌ Variáveis de ambiente não configuradas");
     console.error("EMAIL_USER existe?", !!process.env.EMAIL_USER);
     console.error("EMAIL_PASS existe?", !!process.env.EMAIL_PASS);
-    
-    return res.status(500).json({ 
-      success: false, 
-      message: "Servidor não está configurado para enviar e-mails. Configure as variáveis de ambiente." 
+
+    return res.status(500).json({
+      success: false,
+      message: "Servidor não está configurado para enviar e-mails. Configure as variáveis de ambiente."
     });
   }
 
   try {
     console.log("📧 Configurando transporter para:", process.env.EMAIL_USER);
-    
+
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -79,7 +83,7 @@ app.post("/api/enviar-email", async (req, res) => {
     console.log("✅ Conexão com Gmail OK!");
 
     // Formatar total corretamente (aceitar tanto número quanto string)
-    const totalFormatado = typeof total === 'number' 
+    const totalFormatado = typeof total === 'number'
       ? total.toFixed(2).replace(".", ",")
       : total;
 
@@ -97,8 +101,9 @@ app.post("/api/enviar-email", async (req, res) => {
             <p><strong>Nome:</strong> ${nome}</p>
             <p><strong>Email:</strong> ${email}</p>
             <p><strong>Telefone:</strong> ${telefone}</p>
+            <p><strong>instituicao:</strong> ${instituicao}</p>
             <p><strong>dataentrega:</strong> ${dataEntrega}</p>
-            <p><strong>parcelas:</strong> ${parcelas}</p>
+            <p><strong>Plano de Compra:</strong> ${parcelas}</p>
           </div>
           <h3 style="margin-top: 20px;">📦 Itens do Pedido:</h3>
           <table style="width: 100%; border-collapse: collapse;">
@@ -202,31 +207,31 @@ app.post("/api/enviar-email", async (req, res) => {
     console.log("📤 Enviando e-mail para a loja...");
     const infoStore = await transporter.sendMail(mailToStore);
     console.log("✅ E-mail para loja enviado:", infoStore.messageId);
-    
+
     console.log("📤 Enviando e-mail para o cliente:", email);
     const infoCustomer = await transporter.sendMail(mailToCustomer);
     console.log("✅ E-mail para cliente enviado:", infoCustomer.messageId);
 
     // Resposta de sucesso
     console.log("🎉 Todos os e-mails enviados com sucesso!");
-    
-    res.status(200).json({ 
-      success: true, 
+
+    res.status(200).json({
+      success: true,
       message: "Pedido enviado com sucesso!",
       details: {
         loja: infoStore.messageId,
         cliente: infoCustomer.messageId
       }
     });
-    
+
   } catch (error) {
     console.error("❌ Erro ao enviar e-mail:", error);
     console.error("Tipo do erro:", error.name);
     console.error("Mensagem do erro:", error.message);
     console.error("Stack:", error.stack);
-    
+
     let mensagemErro = "Erro ao enviar e-mail. ";
-    
+
     if (error.message.includes("Invalid login")) {
       mensagemErro += "Credenciais inválidas. Use uma Senha de App do Gmail.";
       console.log("\n📌 IMPORTANTE: Para Gmail você precisa:");
@@ -242,14 +247,23 @@ app.post("/api/enviar-email", async (req, res) => {
     } else {
       mensagemErro += error.message;
     }
-    
-    res.status(500).json({ 
-      success: false, 
+
+    res.status(500).json({
+      success: false,
       message: mensagemErro,
-      error: error.message 
+      error: error.message
     });
   }
 });
+
+if (process.env.NODE_ENV === "production") {
+  const buildPath = path.join(__dirname, "../build");
+  app.use(express.static(buildPath));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(buildPath, "index.html"));
+  });
+}
 
 // Iniciar servidor
 app.listen(PORT, () => {
@@ -259,7 +273,7 @@ app.listen(PORT, () => {
   console.log(`🗄️  Banco de dados SQLite ativo`);
   console.log(`📧 Email configurado: ${process.env.EMAIL_USER ? '✅' : '❌ FALTANDO!'}`);
   console.log(`🔑 Senha configurada: ${process.env.EMAIL_PASS ? '✅' : '❌ FALTANDO!'}`);
-  
+
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
     console.log(`\n⚠️  ATENÇÃO: Configure o arquivo .env com:`);
     console.log(`   EMAIL_USER=seu-email@gmail.com`);

@@ -1,13 +1,56 @@
 :root {
-    --fonte: 'Montserrat', sans-serif;
-    --primary: #0056b3;
+    --fonte: 'Montserrat', sans-serif,'Segoe UI',;
+    --primary: #253786;
     --secondary: #00a86b;
     --accent: #ff6b35;
-    --preto: #1a1a2e;
     --light: #f8f9fa;
-    --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient: linear-gradient(135deg, #39bde6 0%, #3149b1 100%);
+
+    --preto: #000000;
+    --azul-escuro: #253786;
+    --azul-claro: #39bde6;
+    --vermelho-escuro: #a51008;
+    --vermelho-claro: #e8412c;
+
+    /* Cores auxiliares */
+    --branco: #ffffff;
+    --cinza-claro: #e2e8f0;
+    --cinza-medio: #718096;
+    --cinza-escuro: #2d3748;
 
 
+}
+
+
+html {
+    scroll-behavior: smooth;
+}
+
+.btn-whatsapp {
+    background-color: #25D366;
+    color: #fff;
+    font-weight: 600;
+    padding: 0.9rem 1.8rem;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+}
+
+.btn-whatsapp:hover {
+    background-color: #1ebe5b;
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 6px 16px rgba(37, 211, 102, 0.5);
+    text-decoration: none;
+}
+
+#sobre {
+    scroll-margin-top: 100px;
+    /* Ajuste baseado na altura do seu header */
+    padding-top: 20px;
 }
 
 body {

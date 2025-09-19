@@ -28,6 +28,22 @@ router.get('/', (req, res) => {
   });
 });
 
+// GET - Buscar os destaques
+router.get('/destaque', (req, res) => {
+  const { categoria, busca } = req.query;
+  
+  let sql = 'SELECT * FROM produtos WHERE id < 11';
+  const params = [];
+
+  db.all(sql, params, (err, rows) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    res.json(rows);
+  });
+});
+
 // GET - Buscar produto por ID
 router.get('/:id', (req, res) => {
   const { id } = req.params;

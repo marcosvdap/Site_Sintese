@@ -7,6 +7,7 @@ const ModalCheckout = ({ isOpen, onClose, carrinho, total }) => {
     nome: '',
     email: '',
     telefone: '',
+    instituicao: '',
     dataentrega: '',
     parcelas: ''
   });
@@ -48,6 +49,11 @@ const ModalCheckout = ({ isOpen, onClose, carrinho, total }) => {
       newErrors.telefone = 'Telefone inválido';
     }
 
+    if (!formData.instituicao.trim()) {
+      newErrors.instituicao = 'Nome é obrigatório';
+    } else if (formData.nome.trim().length < 3) {
+      newErrors.instituicao = 'Nome deve ter pelo menos 3 caracteres';
+    }
     // Validar parcelas
     if (!formData.parcelas) {
       newErrors.parcelas = 'Selecione o número de parcelas';
@@ -91,13 +97,14 @@ const ModalCheckout = ({ isOpen, onClose, carrinho, total }) => {
         nome: formData.nome,
         email: formData.email,
         telefone: formData.telefone,
+        instituicao: formData.instituicao,
         dataEntrega: formData.dataEntrega,
         parcelas: formData.parcelas,
         total: total, // Enviar como número
         itens: carrinho.map(item => ({
           nome: item.nome,
           categoria: item.categoria,
-          codigofabricante: item.Codigo_fabricante,
+          codigofabricante: item.codigo_fabricante,
           quantidade: item.quantidade || 1,
           preco: item.preco
         }))
@@ -299,10 +306,28 @@ const ModalCheckout = ({ isOpen, onClose, carrinho, total }) => {
                     <span className={styles.errorMessage}>{errors.telefone}</span>
                   )}
                 </div>
+
+                <div className={styles.inputGroup}>
+                  <label className={styles.label}>
+                    Instituição <span className={styles.required}>*</span>
+                  </label>
+                  <input
+                    type="text"
+                    className={`${styles.input} ${errors.instituicao ? styles.inputError : ''}`}
+                    value={formData.instituicao}
+                    onChange={(e) => setFormData({ ...formData, instituicao: e.target.value })}
+                    placeholder="Digite o nome da sua instituição"
+                    disabled={isSubmitting}
+                  />
+                  {errors.instituicao && (
+                    <span className={styles.errorMessage}>{errors.instituicao}</span>
+                  )}
+                </div>
+
                 {/* Campo Data de Entrega */}
                 <div className={styles.inputGroup}>
                   <label className={styles.label}>
-                    Data da Cotação <span className={styles.required}>*</span>
+                    Data da Entrega <span className={styles.required}>*</span>
                   </label>
                   <input
                     type="date"
@@ -330,7 +355,7 @@ const ModalCheckout = ({ isOpen, onClose, carrinho, total }) => {
                     <option value="">Selecione</option>
                     {Array.from({ length: 12 }, (_, i) => i + 1).map((num) => (
                       <option key={num} value={num}>
-                        {num} {num === 1 ? 'parcela' : 'parcelas'}
+                        {num} {num === 1 ? 'Mes' : 'Meses'}
                       </option>
                     ))}
                   </select>

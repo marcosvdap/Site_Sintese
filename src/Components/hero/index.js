@@ -15,9 +15,6 @@ const Hero = () => {
           <Link to="/catalogo" className={`${styles.btn} ${styles.btnPrimary}`}>
             Explorar Catálogo
           </Link>
-          <Link to="/sobre" className={`${styles.btn} ${styles.btnSecondary}`}>
-            Saiba Mais
-          </Link>
         </div>
       </div>
     </section>

@@ -1,3 +1,82 @@
+.linkButton {
+    color: var(--branco, white);
+    font-size: 1.4rem;
+    font-weight: 600;
+    padding: 1.2rem 2rem;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    position: relative;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.linkButton:hover {
+    color: var(--primary, #667eea);
+}
+
+/* Para manter o mesmo estilo dos outros links */
+.linkButton::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background: var(--primary, #667eea);
+    transition: width 0.3s ease;
+}
+
+.linkButton:hover::before {
+    width: 100%;
+}
+
+/* Para telas grandes */
+@media (min-width: 1200px) {
+    .linkButton {
+        font-size: 1.6rem;
+        padding: 1.5rem 2.5rem;
+        letter-spacing: 0.8px;
+    }
+}
+
+/* Para tablets */
+@media (max-width: 768px) {
+    .linkButton {
+        font-size: 1.2rem;
+        padding: 1rem 1.5rem;
+    }
+}
+
+/* Para mobile */
+@media (max-width: 480px) {
+    .linkButton {
+        font-size: 1.1rem;
+        padding: 0.9rem 1.2rem;
+        letter-spacing: 0.3px;
+    }
+}
+
+/* ========== Também adicione ao botao.module.css se não tiver ========== */
+
+.botao {
+    display: inline-block;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.primario {
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+/* Se quiser que o botão tenha algum estilo especial quando clicado */
+.primario:active {
+    transform: scale(0.98);
+}
 .cabecalho {
   display: flex;
   align-items: center;

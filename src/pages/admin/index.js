@@ -12,17 +12,16 @@ const Admin = () => {
     adicionarProduto, 
     atualizarProduto, 
     deletarProduto,
-    refetch 
+     
   } = useProdutos();
   
   const [formData, setFormData] = useState({
     nome: '',
     categoria: '',
+    codigo_fabricante: '',
     preco: '',
     descricao: '',
-    imagem: '',
-    estoque: '',
-    marca: ''
+    imagem: ''
   });
   
   const [editando, setEditando] = useState(null);
@@ -42,29 +41,36 @@ const Admin = () => {
     e.preventDefault();
     
     const produtoData = {
-      ...formData,
+      nome: formData.nome,
+      categoria: formData.categoria,
+      codigo_fabricante: formData.codigo_fabricante,
       preco: parseFloat(formData.preco),
-      estoque: parseInt(formData.estoque) || 0
+      descricao: formData.descricao,
+      imagem: formData.imagem
     };
 
     try {
       if (editando) {
         await atualizarProduto(editando, produtoData);
-        setMensagem({ tipo: 'sucesso', texto: '✅ Produto atualizado com sucesso!' });
+        setMensagem({ tipo: 'sucesso', texto: 'Produto atualizado com sucesso!' });
         setEditando(null);
       } else {
         await adicionarProduto(produtoData);
-        setMensagem({ tipo: 'sucesso', texto: '✅ Produto adicionado com sucesso!' });
+        setMensagem({ tipo: 'sucesso', texto: 'Produto adicionado com sucesso!' });
       }
       
       // Limpar formulário
       setFormData({
-        nome: '', categoria: '', preco: '',
-        descricao: '', imagem: '', estoque: '', marca: ''
+        nome: '', 
+        categoria: '', 
+        codigo_fabricante: '',
+        preco: '',
+        descricao: '', 
+        imagem: ''
       });
       
     } catch (error) {
-      setMensagem({ tipo: 'erro', texto: '❌ Erro ao salvar produto!' });
+      setMensagem({ tipo: 'erro', texto: 'Erro ao salvar produto!' });
     }
   };
 
@@ -72,11 +78,10 @@ const Admin = () => {
     setFormData({
       nome: produto.nome,
       categoria: produto.categoria,
+      codigo_fabricante: produto.codigo_fabricante || '',
       preco: produto.preco.toString(),
       descricao: produto.descricao || '',
-      imagem: produto.imagem || '',
-      estoque: produto.estoque.toString(),
-      marca: produto.marca || ''
+      imagem: produto.imagem || ''
     });
     setEditando(produto.id);
     window.scrollTo(0, 0);
@@ -86,18 +91,31 @@ const Admin = () => {
     if (window.confirm(`Tem certeza que deseja deletar "${nome}"?`)) {
       try {
         await deletarProduto(id);
-        setMensagem({ tipo: 'sucesso', texto: '✅ Produto deletado com sucesso!' });
+        setMensagem({ tipo: 'sucesso', texto: 'Produto deletado com sucesso!' });
       } catch (error) {
-        setMensagem({ tipo: 'erro', texto: '❌ Erro ao deletar produto!' });
+        setMensagem({ tipo: 'erro', texto: 'Erro ao deletar produto!' });
       }
     }
   };
 
-  const getStockClass = (estoque) => {
-    if (estoque > 10) return styles.stockHigh;
-    if (estoque > 0) return styles.stockMedium;
-    return styles.stockLow;
+  const formatDate = (dateString) => {
+    if (!dateString) return '-';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   };
+
+  // Lista de categorias mais comuns baseadas nos produtos importados
+  const categorias = [
+    'Bioterch Rabbit',
+    'Invitek',
+    'HiMedia'
+  ];
 
   if (loading) {
     return (
@@ -125,7 +143,7 @@ const Admin = () => {
 
       <form className={styles.formContainer} onSubmit={handleSubmit}>
         <h2 className={styles.formTitle}>
-          {editando ? '✏️ Editar' : '➕ Adicionar'} Produto
+          {editando ? 'Editar' : 'Adicionar'} Produto
         </h2>
         
         {mensagem.texto && (
@@ -139,11 +157,11 @@ const Admin = () => {
         )}
         
         <div className={styles.inputGroup}>
-          <label className={styles.label}>Nome do Produto</label>
+          <label className={styles.label}>Nome do Produto *</label>
           <input
             className={styles.input}
             type="text"
-            placeholder="Ex: Kit de Extração de DNA"
+            placeholder="Ex: 2019-NCOV RUO KIT 500 RXN"
             value={formData.nome}
             onChange={(e) => setFormData({...formData, nome: e.target.value})}
             required
@@ -151,7 +169,7 @@ const Admin = () => {
         </div>
         
         <div className={styles.inputGroup}>
-          <label className={styles.label}>Categoria</label>
+          <label className={styles.label}>Categoria/Fabricante *</label>
           <select
             className={styles.select}
             value={formData.categoria}
@@ -159,17 +177,25 @@ const Admin = () => {
             required
           >
             <option value="">Selecione uma categoria</option>
-            <option value="Extração">Extração</option>
-            <option value="PCR">PCR</option>
-            <option value="Primers">Primers</option>
-            <option value="Clonagem">Clonagem</option>
-            <option value="Enzimas">Enzimas</option>
-            <option value="Sequenciamento">Sequenciamento</option>
+            {categorias.map(cat => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
           </select>
+        </div>
+
+        <div className={styles.inputGroup}>
+          <label className={styles.label}>Código do Fabricante</label>
+          <input
+            className={styles.input}
+            type="text"
+            placeholder="Ex: 10006713"
+            value={formData.codigo_fabricante}
+            onChange={(e) => setFormData({...formData, codigo_fabricante: e.target.value})}
+          />
         </div>
         
         <div className={styles.inputGroup}>
-          <label className={styles.label}>Preço (R$)</label>
+          <label className={styles.label}>Preço (R$) *</label>
           <input
             className={styles.input}
             type="number"
@@ -186,6 +212,7 @@ const Admin = () => {
           <textarea
             className={styles.textarea}
             placeholder="Descrição detalhada do produto..."
+            rows="4"
             value={formData.descricao}
             onChange={(e) => setFormData({...formData, descricao: e.target.value})}
           />
@@ -196,32 +223,25 @@ const Admin = () => {
           <input
             className={styles.input}
             type="text"
-            placeholder="https://exemplo.com/imagem.jpg"
+            placeholder="/imagens/produtos/nome-produto.jpg ou https://..."
             value={formData.imagem}
             onChange={(e) => setFormData({...formData, imagem: e.target.value})}
           />
-        </div>
-        
-        <div className={styles.inputGroup}>
-          <label className={styles.label}>Quantidade em Estoque</label>
-          <input
-            className={styles.input}
-            type="number"
-            placeholder="25"
-            value={formData.estoque}
-            onChange={(e) => setFormData({...formData, estoque: e.target.value})}
-          />
-        </div>
-        
-        <div className={styles.inputGroup}>
-          <label className={styles.label}>Marca</label>
-          <input
-            className={styles.input}
-            type="text"
-            placeholder="Ex: IDT, Thermo, etc."
-            value={formData.marca}
-            onChange={(e) => setFormData({...formData, marca: e.target.value})}
-          />
+          {formData.imagem && (
+            <div style={{ marginTop: '10px' }}>
+              <img 
+                src={formData.imagem} 
+                alt="Preview" 
+                style={{ 
+                  maxWidth: '200px', 
+                  maxHeight: '150px',
+                  borderRadius: '8px',
+                  border: '1px solid #ddd'
+                }}
+                onError={(e) => { e.target.style.display = 'none' }}
+              />
+            </div>
+          )}
         </div>
         
         <div className={styles.buttonGroup}>
@@ -236,8 +256,12 @@ const Admin = () => {
               onClick={() => {
                 setEditando(null);
                 setFormData({
-                  nome: '', categoria: '', preco: '',
-                  descricao: '', imagem: '', estoque: '', marca: ''
+                  nome: '', 
+                  categoria: '', 
+                  codigo_fabricante: '',
+                  preco: '',
+                  descricao: '', 
+                  imagem: ''
                 });
               }}
             >
@@ -250,7 +274,7 @@ const Admin = () => {
       <div className={styles.tableContainer}>
         <div className={styles.tableHeader}>
           <h2 className={styles.tableTitle}>
-            📦 Produtos Cadastrados 
+            Produtos Cadastrados 
             <span className={styles.productCount}>({produtos.length})</span>
           </h2>
         </div>
@@ -258,7 +282,7 @@ const Admin = () => {
         {error && (
           <div className={styles.errorContainer}>
             <div className={styles.errorText}>
-              ⚠️ {error}
+              {error}
             </div>
           </div>
         )}
@@ -271,63 +295,73 @@ const Admin = () => {
             </div>
           </div>
         ) : (
-          <table className={styles.table}>
-            <thead>
-              <tr className={styles.tableHeadRow}>
-                <th className={styles.tableHeadCell}>ID</th>
-                <th className={styles.tableHeadCell}>Nome</th>
-                <th className={styles.tableHeadCell}>Categoria</th>
-                <th className={styles.tableHeadCell}>Preço</th>
-                <th className={styles.tableHeadCell}>Estoque</th>
-                <th className={styles.tableHeadCell}>Marca</th>
-                <th className={styles.tableHeadCell}>Ações</th>
-              </tr>
-            </thead>
-            <tbody className={styles.tableBody}>
-              {produtos.map((produto) => (
-                <tr key={produto.id}>
-                  <td className={`${styles.tableCell} ${styles.productId}`}>
-                    {produto.id}
-                  </td>
-                  <td className={`${styles.tableCell} ${styles.productName}`}>
-                    {produto.nome}
-                  </td>
-                  <td className={styles.tableCell}>
-                    <span className={styles.categoryBadge}>
-                      {produto.categoria}
-                    </span>
-                  </td>
-                  <td className={`${styles.tableCell} ${styles.price}`}>
-                    R$ {produto.preco.toFixed(2)}
-                  </td>
-                  <td className={styles.tableCell}>
-                    <span className={`${styles.stock} ${getStockClass(produto.estoque)}`}>
-                      {produto.estoque}
-                    </span>
-                  </td>
-                  <td className={`${styles.tableCell} ${styles.brand}`}>
-                    {produto.marca || '-'}
-                  </td>
-                  <td className={styles.tableCell}>
-                    <div className={styles.actionButtons}>
-                      <button
-                        onClick={() => handleEdit(produto)}
-                        className={styles.btnEdit}
-                      >
-                        ✏️ Editar
-                      </button>
-                      <button
-                        onClick={() => handleDelete(produto.id, produto.nome)}
-                        className={styles.btnDelete}
-                      >
-                        🗑️ Deletar
-                      </button>
-                    </div>
-                  </td>
+          <div style={{ overflowX: 'auto' }}>
+            <table className={styles.table}>
+              <thead>
+                <tr className={styles.tableHeadRow}>
+                  <th className={styles.tableHeadCell}>ID</th>
+                  <th className={styles.tableHeadCell}>Nome</th>
+                  <th className={styles.tableHeadCell}>Categoria</th>
+                  <th className={styles.tableHeadCell}>Cód. Fabricante</th>
+                  <th className={styles.tableHeadCell}>Preço</th>
+                  <th className={styles.tableHeadCell}>Imagem</th>
+                  <th className={styles.tableHeadCell}>Criado em</th>
+                  <th className={styles.tableHeadCell}>Ações</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className={styles.tableBody}>
+                {produtos.map((produto) => (
+                  <tr key={produto.id}>
+                    <td className={`${styles.tableCell} ${styles.productId}`}>
+                      {produto.id}
+                    </td>
+                    <td className={`${styles.tableCell} ${styles.productName}`}>
+                      <div style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {produto.nome}
+                      </div>
+                    </td>
+                    <td className={styles.tableCell}>
+                      <span className={styles.categoryBadge}>
+                        {produto.categoria}
+                      </span>
+                    </td>
+                    <td className={styles.tableCell}>
+                      {produto.codigo_fabricante || '-'}
+                    </td>
+                    <td className={`${styles.tableCell} ${styles.price}`}>
+                      R$ {produto.preco ? produto.preco.toFixed(2) : '0.00'}
+                    </td>
+                    <td className={styles.tableCell}>
+                      {produto.imagem ? (
+                        <span style={{ color: '#48bb78', fontSize: '12px' }}>✓</span>
+                      ) : (
+                        <span style={{ color: '#ccc', fontSize: '12px' }}>-</span>
+                      )}
+                    </td>
+                    <td className={styles.tableCell} style={{ fontSize: '12px' }}>
+                      {formatDate(produto.created_at)}
+                    </td>
+                    <td className={styles.tableCell}>
+                      <div className={styles.actionButtons}>
+                        <button
+                          onClick={() => handleEdit(produto)}
+                          className={styles.btnEdit}
+                        >
+                          Editar
+                        </button>
+                        <button
+                          onClick={() => handleDelete(produto.id, produto.nome)}
+                          className={styles.btnDelete}
+                        >
+                          Deletar
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
     </div>

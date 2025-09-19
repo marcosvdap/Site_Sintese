@@ -27,10 +27,10 @@ const ProdutoCard = ({ produto, abrirCarrinho }) => {
       height: 'fit-content'
     }}>
       <img
-        src={produto.imagem || 'https://via.placeholder.com/300x200/cccccc/white?text=Sem+Imagem'}
+        src={produto.imagem }
         alt={produto.nome}
         style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '4px', marginBottom: '12px', display: 'block' }}
-        onError={(e) => { e.target.src = 'https://via.placeholder.com/300x200/cccccc/white?text=Erro+Imagem'; }}
+        onError={(e) => { e.target.src = '/Imagens/produtos/placeholder.png'; }}
       />
 
       <h3 style={{ margin: '0 0 8px 0', fontSize: '18px', color: '#333', lineHeight: '1.2' }}>

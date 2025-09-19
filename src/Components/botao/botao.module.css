@@ -1,24 +1,25 @@
 .secundario {
   background: transparent;
-  color: #667eea;
-  border: 2px solid #667eea;
+  color: #253786;
+  border: 2px solid #253786;
+ 
 }
 
 .secundario:hover {
-  background: #667eea;
+  background: #253786;
   color: white;
   transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 25px rgba(37, 55, 134, 0.3);
 }
 
-/* Botão de sucesso */
 .sucesso {
-  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  background: linear-gradient(135deg, #39bde6 0%, #253786 100%);
   color: white;
+ 
 }
 
 .sucesso:hover {
   transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
-  background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+  box-shadow: 0 8px 25px rgba(57, 189, 230, 0.4);
+  background: linear-gradient(135deg, #253786 0%, #39bde6 100%);
 }

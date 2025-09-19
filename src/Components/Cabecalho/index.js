@@ -12,10 +12,12 @@ function Cabecalho() {
     const toggleMenu = () => {
         setMenuAberto(!menuAberto);
     };
+
+   
     return (
         <header className={styles.cabecalho}>
-            <Link to="./">
-                <img src={logo} alt="sintese"></img>
+            <Link to="/">
+                <img src={logo} alt="sintese" />
             </Link>
             <button className={styles.menuToggle} onClick={toggleMenu}>
                 {menuAberto ? <FaTimes /> : <FaBars />}
@@ -23,25 +25,23 @@ function Cabecalho() {
 
             <nav className={`${styles.nav} ${menuAberto ? styles.aberto : ""}`}>
                 <Botao tipo="primario">
-                    <Cabecalholink URL="./">Home</Cabecalholink>
+                    <Cabecalholink URL="/">Home</Cabecalholink>
                 </Botao>
 
                 <Botao tipo="primario">
-                    <Cabecalholink URL="./catalogo">Catalogo</Cabecalholink>
+                    <Cabecalholink URL="/catalogo">Catálogo</Cabecalholink>
                 </Botao>
 
                 <Botao tipo="primario">
-                    <Cabecalholink URL="./sobre">Sobre</Cabecalholink>
+                    <a href="#sobre" className={styles.linkButton}>Sobre</a>
                 </Botao>
 
                 <Botao tipo="primario">
-                    <Cabecalholink URL="./faleconosco">Fale conosco</Cabecalholink>
+                    <a href="#faleconosco" className={styles.linkButton}>Fale Conosco</a>
                 </Botao>
             </nav>
         </header>
-
-    )
+    );
 }
 
 export default Cabecalho;
-

@@ -1,87 +1,106 @@
 // src/components/Catalogo/CarrinhoContext.jsx
-import React, { createContext, useContext, useReducer, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const CarrinhoContext = createContext();
 
-const carrinhoReducer = (state, action) => {
-  switch (action.type) {
-    case 'ADICIONAR_ITEM':
-      const itemExistente = state.find(item => item.id === action.payload.id);
-      if (itemExistente) {
-        return state;
-      }
-      return [...state, { ...action.payload, quantidade: 1 }];
-
-    case 'REMOVER_ITEM':
-      return state.filter(item => item.id !== action.payload);
-
-    case 'LIMPAR_CARRINHO':
-      return [];
-
-    default:
-      return state;
-  }
-};
+export const useCarrinho = () => useContext(CarrinhoContext);
 
 export const CarrinhoProvider = ({ children }) => {
-  const [carrinho, dispatch] = useReducer(carrinhoReducer, []);
-  const [mensagemAviso, setMensagemAviso] = useState('');
-  const [sidebarAberto, setSidebarAberto] = useState(false); // NOVO
+  const [carrinho, setCarrinho] = useState(() => {
+    // Recupera o carrinho do localStorage ao inicializar
+    const carrinhoSalvo = localStorage.getItem('carrinho');
+    return carrinhoSalvo ? JSON.parse(carrinhoSalvo) : [];
+  });
 
+  const [mensagemAviso, setMensagemAviso] = useState('');
+  
+
+  // Salva o carrinho no localStorage sempre que ele mudar
+  useEffect(() => {
+    localStorage.setItem('carrinho', JSON.stringify(carrinho));
+  }, [carrinho]);
+
+  // Limpar mensagem de aviso após 3 segundos
+  useEffect(() => {
+    if (mensagemAviso) {
+      const timer = setTimeout(() => {
+        setMensagemAviso('');
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [mensagemAviso]);
 
   const adicionarItem = (produto) => {
-    const existe = carrinho.find(item => item.id === produto.id);
-    if (existe) {
-      setMensagemAviso('Item já foi adicionado ao carrinho!');
-      return false; // duplicata
+    const itemExistente = carrinho.find(item => item.id === produto.id);
+
+    if (itemExistente) {
+      // Se o item já existe, aumenta a quantidade
+      atualizarQuantidade(produto.id, itemExistente.quantidade + 1);
+      setMensagemAviso(`${produto.nome} - quantidade atualizada!`);
+      
+      return true;
     }
-    dispatch({ type: 'ADICIONAR_ITEM', payload: produto });
-    setMensagemAviso(''); // limpa aviso se adicionou
-    setSidebarAberto(true); // abre sidebar automaticamente
+
+    // Se não existe, adiciona com quantidade 1
+    setCarrinho([...carrinho, { ...produto, quantidade: 1 }]);
+    setMensagemAviso(`${produto.nome} adicionado ao carrinho!`);
+    
     return true;
   };
 
-
-  const removerItem = (produtoId) => {
-    dispatch({ type: 'REMOVER_ITEM', payload: produtoId });
+  const removerItem = (id) => {
+    const item = carrinho.find(item => item.id === id);
+    setCarrinho(carrinho.filter(item => item.id !== id));
+    if (item) {
+      
+      setMensagemAviso(`${item.nome} removido do carrinho`);
+    }
   };
 
+  const atualizarQuantidade = (id, novaQuantidade) => {
+    if (novaQuantidade < 1) return;
+    
+    setCarrinho(carrinho.map(item =>
+      item.id === id
+        ? { ...item, quantidade: novaQuantidade }
+        : item
+    ));
+  };
+
+ const totalItens = carrinho.reduce((total, item) => total + (item.quantidade || 1), 0);
+
   const limparCarrinho = () => {
-    dispatch({ type: 'LIMPAR_CARRINHO' });
+    setCarrinho([]);
+    setMensagemAviso('Carrinho limpo!');
   };
 
   const calcularTotal = () => {
-    return carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0);
+    return carrinho.reduce((total, item) => {
+      const preco = parseFloat(item.preco) || 0;
+      const quantidade = parseInt(item.quantidade) || 1;
+      return total + (preco * quantidade);
+    }, 0);
   };
 
-
-  const totalItens = carrinho.reduce((total, item) => total + item.quantidade, 0);
-
+  const obterQuantidadeTotal = () => {
+    return carrinho.reduce((total, item) => total + (item.quantidade || 1), 0);
+  };
 
   return (
     <CarrinhoContext.Provider value={{
       carrinho,
       adicionarItem,
       removerItem,
+      atualizarQuantidade,
       limparCarrinho,
       calcularTotal,
-      totalItens,
-      sidebarAberto,
-      setSidebarAberto,
+      obterQuantidadeTotal,
       mensagemAviso,
-      setMensagemAviso
-
-
+      totalItens
     }}>
       {children}
     </CarrinhoContext.Provider>
   );
 };
 
-export const useCarrinho = () => {
-  const context = useContext(CarrinhoContext);
-  if (!context) {
-    throw new Error('useCarrinho deve ser usado dentro de CarrinhoProvider');
-  }
-  return context;
-};
+export default CarrinhoContext;

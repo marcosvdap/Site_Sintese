@@ -1,11 +1,40 @@
 .rodape {
-    display: flex;
-    justify-content: center;
-    background: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 3rem;
+  background: var(--gradient);
+  border-top: 2px solid #e5e7eb; /* igual ao cabeçalho, mas no topo */
+  min-height: 80px;
+  margin-top: 40px;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1); /* sombra invertida */
+  text-align: center;
+  flex-direction: column;
 }
 
 .rodape h2 {
-    font-weight: 400;
-    font-size: 18px;
-    color: var(--branco);
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: var(--branco);
+  margin: 0;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+}
+
+.rodape span {
+  font-weight: 800;
+  color: #ffda79; /* destaque no nome */
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .rodape {
+    padding: 1rem 2rem;
+    min-height: 70px;
+  }
+
+  .rodape h2 {
+    font-size: 1rem;
+  }
 }

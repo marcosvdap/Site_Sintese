@@ -1,5 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+const bcrypt = require('bcryptjs');
+
 
 // Criar/conectar ao banco SQLite
 const db = new sqlite3.Database(path.join(__dirname, 'produtos.db'), (err) => {
@@ -10,7 +12,6 @@ const db = new sqlite3.Database(path.join(__dirname, 'produtos.db'), (err) => {
     initDatabase();
   }
 });
-
 // Criar tabelas se não existirem
 function initDatabase() {
   const sql = `
@@ -32,7 +33,40 @@ function initDatabase() {
       console.error('Erro ao criar tabela:', err);
     } else {
       console.log('✅ Tabela produtos pronta');
-      verificarEPopular();
+      userpadrao();
+      
+    }
+  });
+}
+
+function userpadrao() {
+   db.run(`
+  CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    name TEXT,
+    role TEXT DEFAULT 'admin',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    last_login DATETIME
+  )
+`, (err) => {
+    if (err) {
+      console.error('Erro ao criar tabela users:', err);
+    } else {
+      console.log('✅ Tabela users pronta');
+
+      // Criar usuário admin padrão se não existir
+      const defaultPassword = bcrypt.hashSync('SinteseBio2024!', 10);
+      db.run(
+        `INSERT OR IGNORE INTO users (username, password, name, role) 
+       VALUES (?, ?, ?, ?)`,
+        ['admin@sintesebio.com.br', defaultPassword, 'Administrador', 'admin'],
+        (err) => {
+          if (!err) console.log('✅ Usuário admin padrão criado');
+          verificarEPopular();
+        }
+      );
     }
   });
 }
@@ -59,26 +93,26 @@ function popularDadosIniciais() {
     {
       nome: "Kit de Extração de DNA",
       categoria: "IDT",
-      Codigo_fabricante: "Bases",
+      codigo_fabricante: "Bases",
       preco: 450.00,
       descricao: "Kit completo para extração de DNA de alta qualidade",
-      imagem: "https://via.placeholder.com/300x200/667eea/white?text=DNA+Kit",
+      imagem: "/imagens/produtos/kit_med.jpg",
     },
     {
       nome: "Nucletiodeos Modificados",
       categoria: "OMEGA BIO TEK",
-      Codigo_fabricante: "Bases",
+      codigo_fabricante: "Bases",
       preco: 450.00,
       descricao: "Kit completo para extração de DNA de alta qualidade",
-      imagem: "https://via.placeholder.com/300x200/667eea/white?text=DNA+Kit",
+      imagem: "/Imagens/produtos/placeholder.png",
     },
     {
       nome: "desenvolvimento licenciamento",
       categoria: "IDT",
-      Codigo_fabricante: "Bases",
+      codigo_fabricante: "Bases",
       preco: 450.00,
       descricao: "Kit completo para extração de DNA de alta qualidade",
-      imagem: "https://via.placeholder.com/300x200/667eea/white?text=DNA+Kit",
+      imagem: "/Imagens/produtos/placeholder.png",
     }
   ];
 
@@ -91,7 +125,7 @@ function popularDadosIniciais() {
     stmt.run(
       produto.nome,
       produto.categoria,
-      produto.Codigo_fabricante ,
+      produto.codigo_fabricante,
       produto.preco,
       produto.descricao,
       produto.imagem,
