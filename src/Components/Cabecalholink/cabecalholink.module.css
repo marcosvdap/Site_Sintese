@@ -1,56 +1,68 @@
 .link {
-    color: var(--branco, white);
-    font-size: 1.4rem;
-    font-weight: 600;
-    padding: 1.2rem 2rem;
-    text-decoration: none;
-    transition: color 0.3s ease;
-    position: relative;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
+  color: #253785;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.5rem 1.5rem;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  position: relative;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  display: inline-block;
 }
 
 .link:hover {
-    color: var(--primary, #667eea);
+  color: #667eea;
 }
 
+/* Remover linha inferior no hover */
 .link::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 3px;
-    background: var(--primary, #667eea);
-    transition: width 0.3s ease;
+  display: none;
 }
 
-.link:hover::before {
-    width: 100%;
+/* Separador vertical entre links */
+.link::after {
+  content: '|';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #d1d5db;
+  font-weight: 300;
 }
 
-/* Para telas grandes - ainda maior */
+/* Remove o separador do último link */
+.link:last-child::after {
+  display: none;
+}
+
+/* Para telas grandes */
 @media (min-width: 1200px) {
-    .link {
-        font-size: 1.6rem; /* ~25px em telas grandes */
-        padding: 1.5rem 2.5rem;
-        letter-spacing: 0.8px;
-    }
+  .link {
+    font-size: 1rem;
+    padding: 0.5rem 1.8rem;
+  }
 }
 
 /* Para tablets */
 @media (max-width: 768px) {
-    .link {
-        font-size: 1.2rem; /* ~19px */
-        padding: 1rem 1.5rem;
-    }
+  .link {
+    font-size: 0.95rem;
+    padding: 1rem 1.5rem;
+    width: 100%;
+    text-align: center;
+  }
+  
+  /* Remove separadores no mobile */
+  .link::after {
+    display: none;
+  }
 }
 
 /* Para mobile */
 @media (max-width: 480px) {
-    .link {
-        font-size: 1.1rem; /* ~17px */
-        padding: 0.9rem 1.2rem;
-        letter-spacing: 0.3px;
-    }
+  .link {
+    font-size: 0.9rem;
+    padding: 0.9rem 1.2rem;
+  }
 }

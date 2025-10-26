@@ -1,0 +1,87 @@
+.marcasSection {
+  width: 100%;
+  background-color: #ffffff;
+  padding-bottom: 0rem;
+}
+.divider {
+  width: 100vw;
+  height: 3px;
+  background-color: #253785;
+  margin-top: 2rem;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
+
+.marcasHeader {
+  background-color: #253785;
+  padding: 1rem 0;
+  text-align: center;
+}
+
+.marcasHeader h2 {
+  color: #ffffff;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+.carouselContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 3rem 4rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.marcasWrapper {
+  display: flex;
+  gap: 4rem;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.marcaItem {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.marcaItem img {
+  max-width: 200px;
+  max-height: 80px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.btnPrev,
+.btnNext {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #253785;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.btnPrev:hover:not(:disabled),
+.btnNext:hover:not(:disabled) {
+  color: #1a2660;
+}
+
+.btnPrev:disabled,
+.btnNext:disabled {
+  color: #253785;
+  cursor: not-allowed;
+}
+

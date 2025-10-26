@@ -1,0 +1,64 @@
+/* ========== SEÇÃO DE ESTATÍSTICAS ========== */
+.statsSection {
+  width: 100%;
+  background-color: #f9fafb;
+  padding: 4rem 0;
+}
+
+.statsContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4rem;
+  padding: 0 4rem;
+}
+
+.statCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+}
+
+.statIcon {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  margin-bottom: 0.5rem;
+}
+
+.statNumber {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #253785;
+  margin: 0;
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #000000;
+  margin: 0;
+  text-transform: lowercase;
+}
+
+/* ========== RESPONSIVO ========== */
+@media (max-width: 768px) {
+  .statsContainer {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    padding: 0 2rem;
+  }
+
+  .statIcon {
+    width: 80px;
+    height: 80px;
+  }
+
+  .statNumber {
+    font-size: 2.5rem;
+  }
+}

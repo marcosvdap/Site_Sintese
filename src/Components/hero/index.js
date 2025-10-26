@@ -5,15 +5,23 @@ const Hero = () => {
   return (
     <section className={styles.hero}>
       <div className={styles.heroContent}>
-        <h1>Transformando Ciência em Soluções</h1>
-        <p className={styles.heroSubtitle}>
-          Distribuidor exclusivo IDT no Brasil. Mais de 3.000 produtos de
-          biotecnologia das melhores marcas mundiais para impulsionar sua
-          pesquisa.
+        <h1 className={styles.heroTitle}>
+          Transformando Ciência em Soluções
+        </h1>
+        
+        <p className={styles.heroText}>
+          Distribuidor exclusivo <strong>IDT no Brasil</strong>.
+          <br />
+          Mais de <strong>3.000 produtos de biotecnologia</strong>
+          <br />
+          <strong>das melhores marcas mundiais</strong> para
+          <br />
+          impulsionar sua pesquisa.
         </p>
+
         <div className={styles.heroButtons}>
           <Link to="/catalogo" className={`${styles.btn} ${styles.btnPrimary}`}>
-            Explorar Catálogo
+            SAIBA MAIS
           </Link>
         </div>
       </div>

@@ -8,7 +8,7 @@ import Login from "./pages/Login";
 
 function AppRoutes() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename= "/Site_Sintese">
       <AuthProvider>
         <Routes>
           <Route path="/" element={<Home />} />

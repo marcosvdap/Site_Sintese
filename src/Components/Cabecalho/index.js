@@ -13,7 +13,6 @@ function Cabecalho() {
         setMenuAberto(!menuAberto);
     };
 
-   
     return (
         <header className={styles.cabecalho}>
             <Link to="/">
@@ -27,18 +26,22 @@ function Cabecalho() {
                 <Botao tipo="primario">
                     <Cabecalholink URL="/">Home</Cabecalholink>
                 </Botao>
-
+                <div className={styles.divisor}></div>
                 <Botao tipo="primario">
-                    <Cabecalholink URL="/catalogo">Catálogo</Cabecalholink>
+                    <Cabecalholink URL="/sobre">Sobre</Cabecalholink>
                 </Botao>
-
+                <div className={styles.divisor}></div>
                 <Botao tipo="primario">
-                    <a href="#sobre" className={styles.linkButton}>Sobre</a>
+                    <Cabecalholink URL="/eventos">Eventos</Cabecalholink>
                 </Botao>
-
+                <div className={styles.divisor}></div>
                 <Botao tipo="primario">
-                    <a href="#faleconosco" className={styles.linkButton}>Fale Conosco</a>
+                    <Cabecalholink URL="/contato">Contato</Cabecalholink>
                 </Botao>
+                <div className={styles.divisor}></div>
+                <Link to="/catalogo" className={styles.linkButton}>
+                    CATALOGO
+                </Link>
             </nav>
         </header>
     );

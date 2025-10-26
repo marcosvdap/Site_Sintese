@@ -1,191 +1,91 @@
-.linkButton {
-    color: var(--branco, white);
-    font-size: 1.4rem;
-    font-weight: 600;
-    padding: 1.2rem 2rem;
-    text-decoration: none;
-    transition: color 0.3s ease;
-    position: relative;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    cursor: pointer;
-    display: inline-block;
+/* ========== CABEÇALHO ========== */
+.divisor {
+  width: 2px;
+  height: 14px;
+  background: #253785;
+  /* margin: 0 1.5rem; */
 }
 
-.linkButton:hover {
-    color: var(--primary, #667eea);
-}
-
-/* Para manter o mesmo estilo dos outros links */
-.linkButton::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 3px;
-    background: var(--primary, #667eea);
-    transition: width 0.3s ease;
-}
-
-.linkButton:hover::before {
-    width: 100%;
-}
-
-/* Para telas grandes */
-@media (min-width: 1200px) {
-    .linkButton {
-        font-size: 1.6rem;
-        padding: 1.5rem 2.5rem;
-        letter-spacing: 0.8px;
-    }
-}
-
-/* Para tablets */
-@media (max-width: 768px) {
-    .linkButton {
-        font-size: 1.2rem;
-        padding: 1rem 1.5rem;
-    }
-}
-
-/* Para mobile */
-@media (max-width: 480px) {
-    .linkButton {
-        font-size: 1.1rem;
-        padding: 0.9rem 1.2rem;
-        letter-spacing: 0.3px;
-    }
-}
-
-/* ========== Também adicione ao botao.module.css se não tiver ========== */
-
-.botao {
-    display: inline-block;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-}
-
-.primario {
-    background: transparent;
-    border: none;
-    padding: 0;
-}
-
-/* Se quiser que o botão tenha algum estilo especial quando clicado */
-.primario:active {
-    transform: scale(0.98);
-}
 .cabecalho {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.5rem 3rem; /* Aumentei bastante o padding */
-  background: var(--gradient);
-  border-bottom: 2px solid #e5e7eb; /* Borda mais grossa */
-  min-height: 90px; /* Cabeçalho mais alto */
+  padding: 1.5rem 4rem;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  min-height: 80px;
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Sombra no cabeçalho */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 img {
-  width: 220px; /* Logo um pouco maior */
+  width: 180px;
   height: auto;
 }
 
 .nav {
   display: flex;
-  gap: 1rem; /* Mais espaço entre links */
+  gap: 0;
   align-items: center;
 }
 
-/* Links do menu MUITO maiores e destacados */
-.link {
-  position: relative;
-  color: var(--preto);
-  font-size: 1.4rem; /* Bem maior - ~22px */
-  font-weight: 700; /* Mais negrito */
-  padding: 1.5rem 2.5rem; /* Padding bem generoso */
-  text-decoration: none;
-  text-transform: uppercase;
-  letter-spacing: 1.2px; /* Mais espaçamento */
-  transition: all 0.3s ease;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  min-height: 60px; /* Altura mínima maior */
-  background: rgba(255, 255, 255, 0.05); /* Fundo sutil */
-  border: 2px solid transparent; /* Borda invisível inicialmente */
-}
-
-/* Hover com muito mais destaque */
-.link:hover {
-  color: white;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  transform: translateY(-3px) scale(1.08); /* Aumenta mais no hover */
-  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-}
-
-/* Efeito de brilho mais pronunciado */
-.link::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-  transition: left 0.6s ease;
-  border-radius: 12px;
-}
-
-.link:hover::before {
-  left: 100%;
-}
-
-/* Botão de menu maior */
+/* ========== BOTÃO DE MENU MOBILE ========== */
 .menuToggle {
   display: none;
   background: none;
   border: none;
-  font-size: 2.2rem; /* Bem maior */
+  font-size: 1.8rem;
   cursor: pointer;
-  padding: 1rem;
-  color: var(--preto);
-  transition: all 0.3s ease;
-  border-radius: 8px;
+  padding: 0.5rem;
+  color: #1f2937;
+  transition: color 0.3s ease;
 }
 
 .menuToggle:hover {
-  color: white;
-  background: rgba(102, 126, 234, 0.8);
-  transform: scale(1.1);
+  color: #253785;
 }
 
-/* Para telas grandes - ainda maior */
+/* ========== BOTÃO CATÁLOGO (linkButton) ========== */
+.linkButton {
+  color: #253785;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.65rem 2rem;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: inline-block;
+  background: #FCC204;
+  border-radius: 50px;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  border: none;
+  margin-left: 1.5rem;
+}
+
+.linkButton:hover {
+  background: #e6b003;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(252, 194, 4, 0.4);
+}
+
+/* ========== RESPONSIVO ========== */
 @media (min-width: 1200px) {
-  .link {
-    font-size: 1.6rem; /* ~25px em telas grandes */
-    padding: 1.8rem 3rem;
-    letter-spacing: 1.5px;
+  .cabecalho {
+    padding: 1.5rem 6rem;
   }
   
-  .cabecalho {
-    padding: 2rem 4rem;
-    min-height: 100px;
+  img {
+    width: 200px;
   }
 }
 
-/* Responsivo */
 @media (max-width: 768px) {
   .cabecalho {
-    padding: 1.2rem 2rem;
-    min-height: 80px;
+    padding: 1rem 2rem;
+    min-height: 70px;
   }
 
   .menuToggle {
@@ -198,16 +98,16 @@ img {
     right: 0;
     background: white;
     flex-direction: column;
-    align-items: stretch; /* Links ocupam toda largura */
+    align-items: stretch;
     padding: 2rem;
-    gap: 1rem;
-    width: 300px; /* Menu mobile maior */
+    gap: 1.5rem;
+    width: 280px;
     transform: translateX(100%);
     transition: transform 0.3s ease-in-out;
-    border-left: 3px solid var(--primary, #667eea);
-    box-shadow: -8px 0 25px rgba(0, 0, 0, 0.15);
+    border-left: 2px solid #e5e7eb;
+    box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
     z-index: 999;
-    max-height: calc(100vh - 80px);
+    max-height: calc(100vh - 70px);
     overflow-y: auto;
   }
 
@@ -215,51 +115,27 @@ img {
     transform: translateX(0);
   }
 
-  /* Links no mobile ainda maiores */
-  .nav .link {
+  .linkButton {
     width: 100%;
-    justify-content: center;
-    padding: 1.5rem 1rem;
-    font-size: 1.3rem;
-    border-radius: 10px;
-    background: rgba(102, 126, 234, 0.05);
-    margin-bottom: 0.5rem;
+    text-align: center;
+    margin-left: 0;
   }
-  
-  .nav .link:hover {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+
+  .divisor {
+    display: none;
+  }
+
+  img {
+    width: 150px;
   }
 }
 
-/* Efeito pulsante para chamar atenção */
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
-}
+@media (max-width: 480px) {
+  .cabecalho {
+    padding: 1rem 1.5rem;
+  }
 
-/* Aplica pulsação ocasional nos links */
-.link:nth-child(2) {
-  animation: pulse 3s infinite;
-  animation-delay: 1s;
-}
-.link {
-  font-size: 1.6rem; /* ~26px */
-  font-weight: 800; /* Extra bold */
-  padding: 2rem 3rem; /* Padding enorme */
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Sombra no texto */
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-  border: 2px solid rgba(102, 126, 234, 0.2);
-}
-
-.link:hover {
-  font-size: 1.7rem; /* Cresce no hover */
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  animation: glow 1s ease-in-out infinite alternate;
-}
-
-@keyframes glow {
-  from { box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4); }
-  to { box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6); }
+  img {
+    width: 130px;
+  }
 }
